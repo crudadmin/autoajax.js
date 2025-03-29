@@ -264,7 +264,7 @@ var autoAjax = {
             }
 
             //On validation error
-            else if ([422, 403].includes(status)) {
+            else if ([422].includes(status)) {
                 this.fireEventsOn(
                     [options.validation, options.globalEvents.validation],
                     finalResponse
