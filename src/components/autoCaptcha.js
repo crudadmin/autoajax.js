@@ -7,6 +7,12 @@ const allowers = {
                 this.allowAction(form, 'mouseenter');
             }, 5000);
         });
+
+        form.addEventListener('touchstart', e => {
+            setTimeout(() => {
+                this.allowAction(form, 'touchstart');
+            }, 1000);
+        });
     },
     allowAfterMouseActivity(form) {
         let counter = 0;
