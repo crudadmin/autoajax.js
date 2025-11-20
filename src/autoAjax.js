@@ -459,7 +459,11 @@ var autoAjax = {
         Vue.directive('autoCaptcha', {
             ...autoAjax.onMounted((el, binding, vnode) => {
                 autoAjax.tryNextTick(vnode, () => {
-                    autoCaptcha.register(el, binding.value);
+                    autoCaptcha.register(
+                        el,
+                        this.getFormAction(el),
+                        binding.value
+                    );
                 });
             }),
         });
@@ -554,6 +558,13 @@ var autoAjax = {
 
         return data;
     },
+    getFormAction(form) {
+        return (
+            form.getAttribute('action') ||
+            form.getAttribute('data-action') ||
+            form.action
+        );
+    },
     registerFormSubmit(form, options) {
         form.autoAjaxOptions = options = Object.assign(
             autoAjax.core.mergeOptions(cloneDeep(autoAjax.options), options),
@@ -565,9 +576,7 @@ var autoAjax = {
         form.addEventListener('submit', e => {
             const data = this.buildFromData(form, options),
                 method = form.method,
-                action =
-                    form.getAttribute('action') ||
-                    form.getAttribute('data-action');
+                action = this.getFormAction(form);
 
             const fire = async () => {
                 autoAjax.core.setLoading(form, true);

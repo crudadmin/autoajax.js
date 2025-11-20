@@ -64,10 +64,7 @@ const allowers = {
 };
 
 var autoCaptcha = {
-    register(form, options) {
-        let originalAction =
-            form.getAttribute('action') || form.getAttribute('data-action');
-
+    register(form, originalAction, options) {
         options = Object.assign({}, options || {});
 
         form.autoAjaxOptions.autoCaptcha = {
