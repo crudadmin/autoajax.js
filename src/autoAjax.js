@@ -249,8 +249,12 @@ var autoAjax = {
          */
         ajaxResponse(response, form) {
             var options = form.autoAjaxOptions,
-                finalResponse = [response?.data, response, form],
-                status = response?.status;
+                finalResponse = [
+                    response ? response.data : null,
+                    response,
+                    form,
+                ],
+                status = response ? response.status : null;
 
             //Set ajax status as done
             autoAjax.core.setLoading(form, false);

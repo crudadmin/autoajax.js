@@ -100,7 +100,7 @@ export default class ErrorMessage {
 
             for (var i = 0; i < addAfterElement.length; i++) {
                 let addAfter = addAfterElement[i],
-                    nextElement = addAfter?.nextElementSibling;
+                    nextElement = addAfter ? addAfter.nextElementSibling : null;
 
                 //If input does not has bffer
                 if (!input._addedErrorMesageIntoInput) {
