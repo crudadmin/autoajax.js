@@ -54,14 +54,14 @@ var autoAjax = {
         addErrorMessageAfterElement(input) {
             //You can modify, where should be placed validation error message for each input
             //If you want place validation after input parent, you can do something like:
-            //return input.parent();
+            //return input.parentElement;
 
             return input;
         },
 
         //Returns input parrent wrapper where .has-error class will be added
         getInputParentWrapper(input) {
-            return input.parent();
+            return input.parentElement;
         },
 
         //Find form keys by
