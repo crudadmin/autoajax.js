@@ -504,7 +504,7 @@ var autoAjax = {
 
                     //If value has been reseted
                     if (binding.value === null) {
-                        resetsForm.resetForm($(el));
+                        resetsForm.resetForm(el);
                     }
 
                     //If row has been changed

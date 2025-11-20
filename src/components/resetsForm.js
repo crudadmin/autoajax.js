@@ -6,7 +6,7 @@ var resetsForm = {
     init(form) {
         this.saveDefaultRowValues(form);
 
-        observeDOM(form, (mutations) => {
+        observeDOM(form, mutations => {
             this.saveDefaultRowValues(form);
         });
     },
@@ -14,7 +14,7 @@ var resetsForm = {
         var values = {},
             inputs = [...form.querySelectorAll('input, textarea, select')];
 
-        inputs.forEach((input) => {
+        inputs.forEach(input => {
             //If default value has been saved already
             if (!isNil(input.autoAjaxDefaultValue)) {
                 return;
@@ -38,7 +38,7 @@ var resetsForm = {
     resetForm(form) {
         const resetInputs = [
             ...form.querySelectorAll('input, select, textarea'),
-        ].filter((el) => {
+        ].filter(el => {
             if (['_token'].includes(el.getAttribute('name'))) {
                 return false;
             }
@@ -50,7 +50,7 @@ var resetsForm = {
             return true;
         });
 
-        resetInputs.forEach((input) => {
+        resetInputs.forEach(input => {
             if (['checkbox', 'radio'].includes(input.getAttribute('type'))) {
                 input.checked = input.autoAjaxDefaultValue;
             } else {
