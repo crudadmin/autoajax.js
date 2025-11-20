@@ -1,35 +1,6 @@
 import { throttle } from 'lodash';
 
-var autoCaptcha = {
-    register(form, options) {
-        let originalAction =
-            form.getAttribute('action') || form.getAttribute('data-action');
-
-        options = Object.assign({}, options || {});
-
-        form.autoAjaxOptions.autoCaptcha = {
-            enabled: false,
-            error: options.error || null,
-            action: originalAction,
-        };
-
-        form.action = 'null';
-        form.setAttribute('data-action', 'null');
-
-        // Add delay after a long mouse enter event
-        this.allowAfterMouseEnter(form);
-
-        this.allowAfterMouseActivity(form);
-    },
-    onError(form) {
-        if (typeof form.autoAjaxOptions.autoCaptcha.error === 'function') {
-            form.autoAjaxOptions.autoCaptcha.error(() => {
-                this.allowAction(form, 'captcha_modal');
-            });
-        } else {
-            console.error('AutoCaptcha is not allowed yet');
-        }
-    },
+const allowers = {
     allowAfterMouseEnter(form) {
         form.addEventListener('mouseenter', e => {
             setTimeout(() => {
@@ -83,6 +54,37 @@ var autoCaptcha = {
         hidden.value = enablerName;
 
         form.appendChild(hidden);
+    },
+};
+
+var autoCaptcha = {
+    register(form, options) {
+        let originalAction =
+            form.getAttribute('action') || form.getAttribute('data-action');
+
+        options = Object.assign({}, options || {});
+
+        form.autoAjaxOptions.autoCaptcha = {
+            enabled: false,
+            error: options.error || null,
+            action: originalAction,
+        };
+
+        form.action = 'null';
+        form.setAttribute('data-action', 'null');
+
+        // Add delay after a long mouse enter event
+        allowers.allowAfterMouseEnter(form);
+        allowers.allowAfterMouseActivity(form);
+    },
+    onError(form) {
+        if (typeof form.autoAjaxOptions.autoCaptcha.error === 'function') {
+            form.autoAjaxOptions.autoCaptcha.error(() => {
+                allowers.allowAction(form, 'captcha_modal');
+            });
+        } else {
+            console.error('AutoCaptcha is not allowed yet');
+        }
     },
 };
 
