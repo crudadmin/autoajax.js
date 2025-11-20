@@ -1,13 +1,18 @@
 import { cloneDeep, isEqual, isArray, castArray } from 'lodash';
+
 import resetsForm from './components/resetsForm';
 import bindForm from './components/bindForm';
 import ErrorMessage from './components/errorMessage';
 import autoSave from './components/autoSave';
+import autoCaptcha from './components/autoCaptcha';
 
 var autoAjax = {
     options: {
         //Auto reset form on success
         autoReset: false,
+
+        //Basic auto captcha mechanism
+        autoCaptcha: false,
 
         //Automatically save all unsaved form changed
         autoSave: false,
@@ -451,6 +456,14 @@ var autoAjax = {
             }),
         });
 
+        Vue.directive('autoCaptcha', {
+            ...autoAjax.onMounted((el, binding, vnode) => {
+                autoAjax.tryNextTick(vnode, () => {
+                    autoCaptcha.register(el, binding.value);
+                });
+            }),
+        });
+
         Vue.directive('autoReset', {
             ...autoAjax.onMounted((el, binding, vnode) => {
                 autoAjax.tryNextTick(vnode, () => {
@@ -574,7 +587,9 @@ var autoAjax = {
                 autoAjax.core.setLoading(form, false);
             };
 
-            if (form.autoAjaxOptions.loading !== true) {
+            if (options.autoCaptcha && options.autoCaptcha.enabled === false) {
+                autoCaptcha.onError(form);
+            } else if (form.autoAjaxOptions.loading !== true) {
                 fire();
             }
 
