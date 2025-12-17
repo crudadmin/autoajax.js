@@ -23,9 +23,6 @@ var autoAjax = {
         //Automaticaly add validation error messages after each bad filled input
         showInputErrors: true,
 
-        //Automatically bind validation message
-        showValidationMessage: true,
-
         //Available selectors and classes
         selectors: {
             inputWrapperErrorClass: 'has-error',
@@ -35,6 +32,11 @@ var autoAjax = {
         messages: {
             error: 'Something went wrong, please try again later.',
             validation: 'Please fill all required fields.',
+        },
+
+        challenge: {
+            message: 'Please verify you are human.',
+            buttons: ['No', 'Yes'],
         },
 
         //Scrolling on wrong input elements

@@ -1,4 +1,5 @@
 import { throttle } from 'lodash';
+import modalCaptcha from './captchas/modalCaptcha';
 
 const allowers = {
     allowAfterMouseEnter(form) {
@@ -59,7 +60,13 @@ const allowers = {
         hidden.name = '_captcha_enabler';
         hidden.value = enablerName;
 
+        let userdata = document.createElement('input');
+        userdata.type = 'hidden';
+        userdata.name = '_captcha_userdata';
+        userdata.value = JSON.stringify(autoCaptcha.getUserData());
+
         form.appendChild(hidden);
+        form.appendChild(userdata);
     },
 };
 
@@ -68,6 +75,7 @@ var autoCaptcha = {
         options = Object.assign({}, options || {});
 
         form.autoAjaxOptions.autoCaptcha = {
+            ...options,
             enabled: false,
             error: options.error || null,
             action: originalAction,
@@ -81,13 +89,36 @@ var autoCaptcha = {
         allowers.allowAfterMouseActivity(form);
     },
     onError(form) {
-        if (typeof form.autoAjaxOptions.autoCaptcha.error === 'function') {
-            form.autoAjaxOptions.autoCaptcha.error(() => {
-                allowers.allowAction(form, 'captcha_modal');
-            });
-        } else {
-            console.error('AutoCaptcha is not allowed yet');
-        }
+        const options = form.autoAjaxOptions || {},
+            captchaOptions = options.autoCaptcha || {};
+
+        const challange = captchaOptions.challenge || options.challenge;
+
+        modalCaptcha.run({
+            ...challange,
+            success: () => {
+                allowers.allowAction(form, 'captcha_modal_completed');
+
+                console.log('Captcha modal completed!');
+            },
+            error: () => {
+                console.log('Captcha option error callback!');
+
+                // prettier-ignore
+                if (typeof form.autoAjaxOptions.autoCaptcha.error === 'function') {
+                    form.autoAjaxOptions.autoCaptcha.error(() => {
+                        allowers.allowAction(form, 'captcha_modal');
+                    });
+                } else {
+                    console.error('AutoCaptcha is not allowed yet');
+                }
+            },
+        });
+    },
+    getUserData() {
+        return {
+            userAgent: navigator.userAgent,
+        };
     },
 };
 
